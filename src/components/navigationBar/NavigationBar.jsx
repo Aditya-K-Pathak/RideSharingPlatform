@@ -18,7 +18,7 @@ const NavigationBar =() => {
           </li>
         </ul>
         <span class="navbar-text">
-          {window.location.pathname != "/login" && window.location.pathname != "/register" && <a href="/login"><button className="btn btn-dark">Login</button></a>}
+          {window.location.pathname != "/login" && window.location.pathname != "/register" && <a href="/login"><button className="btn btn-light">Login</button></a>}
         </span>
       </div>
     </div>
