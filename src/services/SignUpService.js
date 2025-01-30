@@ -6,9 +6,11 @@ class SignUpService {
     }
 
     addRider = async (userDetails) => {
-        console.log(userDetails);
-        
-        return await axios.post("http://localhost:7000/api/applications/new", userDetails)
+        return await axios.post("http://localhost:7000/api/applications/new", userDetails);
+    }
+
+    login = async (loginCredentials) => {
+        return await axios.post("http://localhost:7000/api/users/login", loginCredentials);
     }
 }
 
