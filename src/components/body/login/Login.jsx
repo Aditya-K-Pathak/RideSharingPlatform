@@ -84,7 +84,7 @@ const Login = () => {
             )}
           </div>
           <p>
-            Not a User? <a href="/register">Register</a>{" "}
+            Not a User? <a href="/register">Register</a>
           </p>
           <div className="mb-3">
             <button

@@ -1,14 +1,19 @@
-const MotoristDetails = () => {
+import { useState } from "react";
+
+const MotoristDetails = (props) => {
   return (
     <>
       <h3 className="text-primary my-2 fw-bold ls-tight text-center ">Driving License Details</h3>
       <div className="mb-3 mt-3" >
         <input
-          type="number"
+          type="text"
           className="form-control"
           placeholder="License No"
           name="licenseNo"
           id="licenseNo"
+          onChange={(event) => {
+            props.data.setLicenseNo(event.target.value)
+          }}
         />
       </div>
 
@@ -20,6 +25,9 @@ const MotoristDetails = () => {
           placeholder="Expiration Date"
           name="expirationDate"
           id="expirationDate"
+          onChange={(event) => {
+            props.data.setExpirationDate(event.target.value)
+          }}
         />
       </div>
 
@@ -30,6 +38,9 @@ const MotoristDetails = () => {
           placeholder="RTA"
           name="rta"
           id="rta"
+          onChange={(event) => {
+            props.data.setRta(event.target.value)
+          }}
         />
       </div>
 
@@ -37,6 +48,9 @@ const MotoristDetails = () => {
         name="allowedVehicles"
         id="allowedVehicles"
         className="form-select"
+        onChange={(event) => {
+            props.data.setAllowedVehicles(event.target.value)
+          }}
       >
         <option value="null">Select Allowed Vehicles</option>
         <option value="Rider">Two Wheeler</option>

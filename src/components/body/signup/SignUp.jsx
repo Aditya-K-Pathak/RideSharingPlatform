@@ -5,7 +5,20 @@ import MotoristDetails from "./MotoristDetails";
 const SignUp = () => {
   const [companies, setCompanies] = useState([]);
   const [motorist, setMotorist] = useState(false);
-  let username, email, phone, companyId, designation, role, employeeId, aadhar;
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [role, setRole] = useState('');
+  const [designation, setDesignation] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
+  const [aadhar, setAadhar] = useState("");
+  const [companyId, setCompanyId] = useState('');
+  
+  const [licenseNo, setLicenseNo] = useState('');
+  const [expirationDate, setExpirationDate] = useState('');
+  const [rta, setRta] = useState('');
+  const [allowedVehicles, setAllowedVehicles] = useState('');
 
   useEffect(() => {
     async function getCompanies() {
@@ -23,7 +36,6 @@ const SignUp = () => {
   return (
     <div>
       <section
-        // className="vh-100"
         style={{ backgroundColor: "hsl(0, 0%, 96%)" }}
       >
         <div className="px-4 py-5 px-md-5 text-center text-lg-start">
@@ -51,7 +63,17 @@ const SignUp = () => {
                           placeholder="Username"
                           name="username"
                           id="username"
-                          onChange={(event) => username=event.target.value}
+                          onChange={(event) => setUsername(event.target.value)}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <input
+                          type="password"
+                          className="form-control"
+                          placeholder="Password"
+                          name="password"
+                          id="password"
+                          onChange={(event) => setPassword(event.target.value)}
                         />
                       </div>
                       <div className="mb-3">
@@ -61,7 +83,7 @@ const SignUp = () => {
                           placeholder="Email"
                           name="officialEmail"
                           id="email"
-                          onChange={(event) => email=event.target.value}
+                          onChange={(event) => setEmail(event.target.value)}
                         />
                       </div>
                       <div className="mb-3">
@@ -71,7 +93,7 @@ const SignUp = () => {
                           placeholder="Phone Number"
                           name="phoneNumber"
                           id="phoneNumber"
-                          onChange={(event) => phone=event.target.value}
+                          onChange={(event) => setPhone(event.target.value)}
                         />
                       </div>
 
@@ -82,7 +104,7 @@ const SignUp = () => {
                           placeholder="Designation"
                           name="designation"
                           id="designation"
-                          onChange={(event) => designation=event.target.value}
+                          onChange={(event) => setDesignation(event.target.value)}
                         />
                       </div>
 
@@ -93,7 +115,7 @@ const SignUp = () => {
                           placeholder="Employee Id"
                           name="employeeId"
                           id="employeeId"
-                          onChange={(event) => employeeId=event.target.value}
+                          onChange={(event) => setEmployeeId(event.target.value)}
                         />
                       </div>
                       <div className="mb-3">
@@ -103,7 +125,7 @@ const SignUp = () => {
                           placeholder="Aadhar Number"
                           name="aadharNumber"
                           id="aadharNumber"
-                          onChange={(event) => aadhar=event.target.value}
+                          onChange={(event) => setAadhar(event.target.value)}
                         />
                       </div>
                       <div className="row">
@@ -112,7 +134,7 @@ const SignUp = () => {
                             name="companies"
                             id="company"
                             className="form-select"
-                            onChange={(event) => companyId=event.target.value}
+                            onChange={(event) => setCompanyId(event.target.value)}
                           >
                             <option value="null">Select Company</option>
                             {companies.map((data, index) => {
@@ -127,7 +149,7 @@ const SignUp = () => {
                         <div className="col-md-4 col">
                           <select name="role" id="role" className="form-select" onChange={(event) => {
                             event.target.value === "Motorist" ? setMotorist(true):setMotorist(false)
-                            role=event.target.value
+                            setRole(event.target.value)
                           }}>
                             <option value="null">Select Role</option>
                             <option value="Rider">Rider</option>
@@ -136,11 +158,13 @@ const SignUp = () => {
                         </div>
                       </div>
                       {
-                        motorist && <MotoristDetails />
+                        motorist && <MotoristDetails data={{setLicenseNo, setAllowedVehicles, setExpirationDate, setRta}} />
                       }
                       <p className="mt-3">Not a User? <a href="/login">Login</a> </p>
                       <div className="mt-3">
                         <button type="button" className="btn btn-primary" onClick={() => {
+                            console.log(companyId);
+                            
                             try {
                                 if (!motorist) {
                                     async function addRider (){
@@ -151,14 +175,38 @@ const SignUp = () => {
                                                 "phoneNumber": phone,
                                                 "companyId": companyId,
                                                 "designation": designation,
-                                                "role": role,
+                                                "role": "Rider",
                                                 "employeeId": employeeId,
                                                 "aadharNumber": aadhar
-                                              })
-                                              const data = await response.data
-                                              console.log(data)
+                                              }).then(
+                                                () => {
+                                                    SignUpService.register({username, password, "roles": "Rider"})
+                                                }
+                                              )
                                         } catch(error) {
                                             console.log(error.response.data)
+                                        }
+                                    }
+                                    addRider();
+                                } else {
+                                    async function addRider (){
+                                        try {   
+                                            await SignUpService.addMotorist({
+                                                "username": username,
+                                                "officialEmail": email,
+                                                "phoneNumber": phone,
+                                                "companyId": companyId,
+                                                "designation": designation,
+                                                "role": "Motorist",
+                                                "employeeId": employeeId,
+                                                "aadharNumber": aadhar
+                                              }, {licenseNo, rta, expirationDate, allowedVehicles}).then(
+                                                (response) => {
+                                                    SignUpService.register({username, password, "roles": "Motorist"})
+                                                }
+                                              )
+                                        } catch(error) {
+                                            console.log(error)
                                         }
                                     }
                                     addRider();
