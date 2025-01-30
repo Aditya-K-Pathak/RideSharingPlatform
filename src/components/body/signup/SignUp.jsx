@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SignUpService from "../../services/SignUpService";
+import SignUpService from "../../../services/SignUpService";
 import MotoristDetails from "./MotoristDetails";
 
 const SignUp = () => {
@@ -145,7 +145,6 @@ const SignUp = () => {
                                 if (!motorist) {
                                     async function addRider (){
                                         try {        
-                                            console.log(username)                                    
                                             await SignUpService.addRider({
                                                 "username": username,
                                                 "officialEmail": email,
