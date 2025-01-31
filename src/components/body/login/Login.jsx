@@ -14,12 +14,10 @@ const Login = () => {
     initialValues: { username: "", password: "" },
     validationSchema: Yup.object({
       username: Yup.string().required("Username is required"),
-      password: Yup.string().required("Password is required"),
-      // .min(6, "Password should be at least 6 characters long")
+      password: Yup.string()
+        .required("Password is required")
+        .min(6, "Password should be at least 6 characters long"),
     }),
-    onSubmit: (values) => {
-      console.log("Form data", values);
-    },
   });
 
   return (
@@ -33,14 +31,14 @@ const Login = () => {
       </div>
       <div>
         <form action="/applications" onSubmit={formik.handleSubmit}>
-          {
-            invalidCredentials && 
-            <div className="mb-3 border border-danger text-center rounded">
-              <label className="text-danger">
-                <b>Invalid Credentials</b>
-              </label>
+          {invalidCredentials && (
+            <div className="mb-3 border border-danger text-center rounded text-danger">
+              {/* <label className="">
+                Invalid Credentials
+              </label> */}
+              Invalid Credentials
             </div>
-          }
+          )}
           <div className="mb-3">
             <label htmlFor="username" className="form form-label">
               Username
@@ -53,10 +51,9 @@ const Login = () => {
                 formik.errors.username && "is-invalid"
               }`}
               placeholder="UserName"
-              onChange={(event) => {
-                formik.handleChange;
-                username = event.target.value;
-              }}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.username}
             />
             {formik.errors.username && (
               <p className="text text-danger">{formik.errors.username}</p>
@@ -73,11 +70,10 @@ const Login = () => {
               className={`form form-control ${
                 formik.errors.password && "is-invalid"
               }`}
-              placeholder="Password(Employee ID)"
-              onChange={(event) => {
-                formik.handleChange;
-                password = event.target.value;
-              }}
+              placeholder="Password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
             />
             {formik.errors.password && (
               <p className="text text-danger">{formik.errors.password}</p>
@@ -100,7 +96,7 @@ const Login = () => {
                   localStorage.setItem("jwtToken", data.token);
                   path("/");
                 } catch (error) {
-                    setInvalidCredentials(true)
+                  setInvalidCredentials(true);
                 }
               }}
             >

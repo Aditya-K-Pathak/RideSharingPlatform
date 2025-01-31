@@ -3,7 +3,7 @@ import { useState } from "react";
 const MotoristDetails = (props) => {
   return (
     <>
-      <h3 className="text-primary my-2 fw-bold ls-tight text-center ">Driving License Details</h3>
+      <h3 className="text-primary my-2 fw-bold ls-tight text-center mt-4 fs-4">Driving License Details</h3>
       <div className="mb-3 mt-3" >
         <input
           type="text"

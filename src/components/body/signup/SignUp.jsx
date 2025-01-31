@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import SignUpService from "../../../services/SignUpService";
 import MotoristDetails from "./MotoristDetails";
 
@@ -33,6 +35,50 @@ const SignUp = () => {
     getCompanies();
   }, []);
 
+//   const formik = useFormik({
+//     initialValues: { username: "", password: "" },
+//     validationSchema: Yup.object({
+//       username: Yup.string().required("Username is required"),
+//       password: Yup.string()
+//         .required("Password is required")
+//         .min(6, "Password should be at least 6 characters long"),
+//     }),
+//   });
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+      officialEmail: "",
+      phoneNumber: "",
+      designation: "",
+      employeeId: "",
+      aadharNumber: "",
+      companyId: "",
+      role: "",
+      licenseNo: "",
+      expirationDate: "",
+      rta: "",
+      allowedVehicles: ""
+    },
+    validationSchema: Yup.object({
+      username: Yup.string().required("Username is required"),
+      password: Yup.string().required("Password is required"),
+      officialEmail: Yup.string().email("Invalid email format").required("Email is required"),
+      phoneNumber: Yup.string().matches(/^\d{10}$/, "Phone number must be exactly 10 digits").required("Phone number is required"),
+      designation: Yup.string().required("Designation is required"),
+      employeeId: Yup.string().required("Employee ID is required"),
+      aadharNumber: Yup.string().matches(/^\d{12}$/, "Aadhar number must be exactly 12 digits").required("Aadhar number is required"),
+      companyId: Yup.string().required("Company ID is required"),
+      role: Yup.string().oneOf(["Motorist", "Rider"], "Role must be Motorist or Rider").required("Role is required"),
+
+      licenseNo: Yup.string().matches(/^[A-Z]{3}\d{4}[A-Z]{3}$/, "Driving license number must be 10 characters in format as 3 letters followed by 4 digits and 3 letters").required("License number is required"),
+      expirationDate: Yup.date().required("Expiration date is required"),
+      rta: Yup.string().required("RTA is required"),
+      allowedVehicles: Yup.string().required("Allowed vehicles is required")
+    }),
+    });
+
   return (
     <div>
       <section
@@ -54,16 +100,20 @@ const SignUp = () => {
               <div className="col-lg-6 mb-5 mb-lg-0">
                 <div className="card">
                   <div className="card-body py-4 px-md-5">
-                    <form onSubmit={() => false}>
-                        <h5 className="text-primary my-2 display-6 fw-bold ls-tight text-center ">User Registeration</h5>
+                    {/* <form onSubmit={() => false} > */}
+                    <form onSubmit={formik.handleSubmit}>
+                        <h5 className="text-primary my-2 display-6 fw-bold ls-tight text-center mb-4">User Registeration</h5>
                       <div className="mb-3">
                         <input
                           type="text"
-                          className="form-control"
+                          className={`form-control ${formik.errors.username && "is-invalid"}`}
                           placeholder="Username"
                           name="username"
                           id="username"
-                          onChange={(event) => setUsername(event.target.value)}
+                        //   onChange={(event) => setUsername(event.target.value)}
+                          onChange={formik.handleChange }
+                          onBlur={formik.handleBlur}
+                          value={formik.values.username}
                         />
                       </div>
                       <div className="mb-3">
@@ -180,7 +230,7 @@ const SignUp = () => {
                                                 "aadharNumber": aadhar
                                               }).then(
                                                 () => {
-                                                    SignUpService.register({username, password, "roles": "Rider"})
+                                                    SignUpService.register({username, password, "roles": "RIDER"})
                                                 }
                                               )
                                         } catch(error) {
@@ -201,8 +251,8 @@ const SignUp = () => {
                                                 "employeeId": employeeId,
                                                 "aadharNumber": aadhar
                                               }, {licenseNo, rta, expirationDate, allowedVehicles}).then(
-                                                (response) => {
-                                                    SignUpService.register({username, password, "roles": "Motorist"})
+                                                () => {
+                                                    SignUpService.register({username, password, "roles": "MOTORIST"})
                                                 }
                                               )
                                         } catch(error) {
